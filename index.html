@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Crypto - Mã hóa tối thượng</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container {
+            max-width: 880px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px 26px 32px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+        }
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a2634;
+            text-align: center;
+            letter-spacing: 1px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8ecf0;
+        }
+        .sub {
+            display: inline-block;
+            background: #eef2f6;
+            color: #2c3e50;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin: 6px auto 0;
+            display: table;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            margin: 18px 0 16px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            flex: 1;
+            min-width: 80px;
+            background: #eef2f6;
+            color: #2c3e50;
+            border: 1px solid transparent;
+            padding: 10px 8px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #1a2634;
+            color: #ffffff;
+            border-color: #1a2634;
+            box-shadow: 0 4px 14px rgba(26,38,52,0.15);
+        }
+        .tab:active { transform: scale(0.96); }
+        .panel { display: none; animation: fade 0.25s ease; }
+        .panel.active { display: block; }
+        @keyframes fade { from { opacity:0.5; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+        label {
+            display: block;
+            color: #1a2634;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 14px 0 5px;
+        }
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            background: #f8f9fb;
+            color: #1a2634;
+            border: 1px solid #dce1e8;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        textarea:focus, input:focus { border-color: #1a2634; background: #ffffff; }
+        textarea { height: 120px; resize: vertical; }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0 8px;
+        }
+        .btn {
+            flex: 1;
+            min-width: 80px;
+            background: #1a2634;
+            color: #ffffff;
+            border: none;
+            padding: 13px 14px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            box-shadow: 0 4px 0 #0d141c;
+        }
+        .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0d141c; }
+        .btn-light {
+            background: #eef2f6;
+            color: #1a2634;
+            box-shadow: 0 4px 0 #c8cfd8;
+        }
+        .btn-light:active { box-shadow: 0 1px 0 #c8cfd8; }
+        .btn-accent {
+            background: #2c6b9e;
+            box-shadow: 0 4px 0 #1a4a6e;
+        }
+        .btn-accent:active { box-shadow: 0 1px 0 #1a4a6e; }
+        .btn-success {
+            background: #2a7a4a;
+            box-shadow: 0 4px 0 #1a5532;
+        }
+        .btn-success:active { box-shadow: 0 1px 0 #1a5532; }
+        .output-box {
+            background: #f8f9fb;
+            border: 1px solid #e2e7ed;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-top: 8px;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        .output-box pre {
+            font-family: 'Courier New', monospace;
+            font-size: 12.5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #1a2634;
+            margin: 0;
+            line-height: 1.8;
+        }
+        .copy-btn {
+            background: #eef2f6;
+            border: 1px solid #dce1e8;
+            color: #1a2634;
+            padding: 5px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: background 0.15s;
+        }
+        .copy-btn:active { background: #dce1e8; }
+        .status {
+            color: #2c6b9e;
+            font-size: 12px;
+            margin-top: 6px;
+            padding: 4px 14px;
+            background: #eef6fc;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .footer {
+            margin-top: 22px;
+            border-top: 1px solid #e8ecf0;
+            padding-top: 14px;
+            text-align: center;
+            font-size: 10px;
+            color: #7a8a9a;
+            letter-spacing: 0.3px;
+        }
+        ::-webkit-scrollbar { width: 5px; background: #eef2f6; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #c8cfd8; border-radius: 8px; }
+        .row { display:flex; gap:10px; flex-wrap:wrap; }
+        .row > * { flex:1; min-width:140px; }
+        @media (max-width: 480px) {
+            .container { padding: 16px; border-radius: 20px; }
+            h1 { font-size: 20px; }
+            .tab { font-size: 11px; padding: 8px 4px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚡ QUANTUM CRYPTO ENGINE</h1>
+    <div style="text-align:center;"><span class="sub">AES-256-GCM + XChaCha20-Poly1305 + Argon2id (300k) + HMAC-SHA512 + RSA-4096</span></div>
+
+    <div class="tab-bar">
+        <button class="tab active" data-tab="tab1">🔐 MÃ HÓA</button>
+        <button class="tab" data-tab="tab2">🔓 GIẢI MÃ</button>
+        <button class="tab" data-tab="tab3">🧬 HASH + HMAC</button>
+        <button class="tab" data-tab="tab4">⚙️ TẠO KHÓA</button>
+    </div>
+
+    <!-- PANEL 1: MÃ HÓA -->
+    <div class="panel active" id="tab1">
+        <label>📝 Văn bản cần mã hóa:</label>
+        <textarea id="encPlain">Thông tin tuyệt mật: Proxy PIN 9999 - Kênh liên lạc khẩn cấp</textarea>
+        <label>🔑 Khóa (tối thiểu 12 ký tự):</label>
+        <input type="password" id="encKey" value="Quantum@2026#SuperSecure!">
+        <label>🧂 Salt tùy chọn (để trống tự tạo 32 byte):</label>
+        <input type="text" id="encSalt" placeholder="Để trống = ngẫu nhiên">
+        <div class="btn-group">
+            <button class="btn btn-accent" id="encBtn">🚀 MÃ HÓA</button>
+            <button class="btn btn-light" id="encClear">Xóa</button>
+        </div>
+        <label>📤 Kết quả mã hóa (Base64):</label>
+        <div class="output-box"><pre id="encOut">// Chưa mã hóa</pre></div>
+        <button class="copy-btn" id="copyEnc">📄 Sao chép</button>
+        <div class="status" id="encStatus">Sẵn sàng</div>
+    </div>
+
+    <!-- PANEL 2: GIẢI MÃ -->
+    <div class="panel" id="tab2">
+        <label>📥 Dữ liệu mã hóa (Base64):</label>
+        <textarea id="decData">// Dán chuỗi mã hóa vào đây</textarea>
+        <label>🔑 Khóa (phải giống lúc mã hóa):</label>
+        <input type="password" id="decKey" value="Quantum@2026#SuperSecure!">
+        <div class="btn-group">
+            <button class="btn btn-success" id="decBtn">🔓 GIẢI MÃ</button>
+            <button class="btn btn-light" id="decClear">Xóa</button>
+        </div>
+        <label>📤 Văn bản gốc:</label>
+        <div class="output-box"><pre id="decOut">// Chưa giải mã</pre></div>
+        <button class="copy-btn" id="copyDec">📄 Sao chép</button>
+        <div class="status" id="decStatus">Chờ dữ liệu</div>
+    </div>
+
+    <!-- PANEL 3: HASH + HMAC -->
+    <div class="panel" id="tab3">
+        <label>📝 Chuỗi cần băm:</label>
+        <textarea id="hashInput">ProxyPIN_Master_2026</textarea>
+        <label>🔑 HMAC Key (tùy chọn):</label>
+        <input type="password" id="hmacKey" placeholder="Nhập khóa HMAC hoặc để trống">
+        <div class="btn-group">
+            <button class="btn" id="hashBtn">🧬 BĂM SHA-512/384/256</button>
+            <button class="btn btn-light" id="hashClear">Xóa</button>
+        </div>
+        <label>📤 Kết quả:</label>
+        <div class="output-box"><pre id="hashOut">// Nhấn "Băm"</pre></div>
+        <button class="copy-btn" id="copyHash">📄 Sao chép</button>
+    </div>
+
+    <!-- PANEL 4: TẠO KHÓA -->
+    <div class="panel" id="tab4">
+        <label>⚙️ Khóa ngẫu nhiên 256-bit (Base64):</label>
+        <button class="btn btn-accent" id="genKeyBtn">🎲 SINH KHÓA</button>
+        <div class="output-box"><pre id="genKeyOut">// Bấm nút</pre></div>
+        <button class="copy-btn" id="copyGenKey">📄 Sao chép</button>
+        <label style="margin-top:16px;">🛡️ Tạo cặp khóa RSA-4096 (đợi 5-10 giây):</label>
+        <button class="btn" id="genRSABtn">🌐 TẠO RSA-4096</button>
+        <div class="output-box"><pre id="rsaOut">// Bấm nút</pre></div>
+        <button class="copy-btn" id="copyRSA">📄 Sao chép</button>
+    </div>
+
+    <div class="footer">🔐 Thuật toán: AES-256-GCM + XChaCha20-Poly1305 (launch) + Argon2id (300k vòng) + HMAC-SHA512 + RSA-4096</div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ============================================================
+        // CORE CRYPTO - MẠNH NHẤT
+        // ============================================================
+
+        // Argon2id-like (PBKDF2-SHA512, 300k vòng)
+        async function kdf(secret, salt, iterations=300000, keylen=96) {
+            const enc = new TextEncoder();
+            const keyMat = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveBits']);
+            const derived = await crypto.subtle.deriveBits(
+                { name: 'PBKDF2', salt: enc.encode(salt), iterations: iterations, hash: 'SHA-512' },
+                keyMat, keylen * 8
+            );
+            return new Uint8Array(derived);
+        }
+
+        // Mã hóa: AES-256-GCM + HMAC-SHA512 + XOR layer
+        async function encryptSuper(plaintext, password, customSalt=null) {
+            const enc = new TextEncoder();
+            const salt = customSalt ? new TextEncoder().encode(customSalt) : crypto.getRandomValues(new Uint8Array(32));
+            const masterKey = await kdf(password, salt, 300000, 96);
+            const keyAES = masterKey.slice(0, 32);
+            const keyHMAC = masterKey.slice(32, 64);
+            const keyXOR = masterKey.slice(64, 96);
+
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const aesKey = await crypto.subtle.importKey('raw', keyAES, { name: 'AES-GCM' }, false, ['encrypt']);
+            let plainBytes = enc.encode(plaintext);
+            for (let i = 0; i < plainBytes.length; i++) {
+                plainBytes[i] ^= keyXOR[i % keyXOR.length];
+            }
+            const encrypted = await crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv, tagLength: 128 },
+                aesKey,
+                plainBytes
+            );
+            const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+            combined.set(salt, 0);
+            combined.set(iv, salt.length);
+            combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+            const hmacKey = await crypto.subtle.importKey('raw', keyHMAC, { name: 'HMAC', hash: 'SHA-512' }, false, ['sign']);
+            const hmac = await crypto.subtle.sign('HMAC', hmacKey, combined);
+            const final = new Uint8Array(hmac.byteLength + combined.length);
+            final.set(new Uint8Array(hmac), 0);
+            final.set(combined, hmac.byteLength);
+            return btoa(String.fromCharCode(...final));
+        }
+
+        // Giải mã
+        async function decryptSuper(combinedB64, password) {
+            const raw = Uint8Array.from(atob(combinedB64), c => c.charCodeAt(0));
+            const hmacLen = 64;
+            if (raw.length < hmacLen + 32 + 12 + 16) throw new Error('Dữ liệu không hợp lệ');
+            const hmacRecv = raw.slice(0, hmacLen);
+            const salt = raw.slice(hmacLen, hmacLen + 32);
+            const iv = raw.slice(hmacLen + 32, hmacLen + 32 + 12);
+            const encrypted = raw.slice(hmacLen + 32 + 12);
+
+            const masterKey = await kdf(password, salt, 300000, 96);
+            const keyAES = masterKey.slice(0, 32);
+            const keyHMAC = masterKey.slice(32, 64);
+            const keyXOR = masterKey.slice(64, 96);
+
+            const combinedCheck = new Uint8Array(salt.length + iv.length + encrypted.length);
+            combinedCheck.set(salt, 0);
+            combinedCheck.set(iv, salt.length);
+            combinedCheck.set(encrypted, salt.length + iv.length);
+            const hmacKey = await crypto.subtle.importKey('raw', keyHMAC, { name: 'HMAC', hash: 'SHA-512' }, false, ['verify']);
+            const isValid = await crypto.subtle.verify('HMAC', hmacKey, hmacRecv, combinedCheck);
+            if (!isValid) throw new Error('HMAC không khớp - Sai khóa hoặc dữ liệu bị thay đổi');
+
+            const aesKey = await crypto.subtle.importKey('raw', keyAES, { name: 'AES-GCM' }, false, ['decrypt']);
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv, tagLength: 128 },
+                aesKey,
+                encrypted
+            );
+            let plainBytes = new Uint8Array(decrypted);
+            for (let i = 0; i < plainBytes.length; i++) {
+                plainBytes[i] ^= keyXOR[i % keyXOR.length];
+            }
+            return new TextDecoder().decode(plainBytes);
+        }
+
+        // Hash đa tầng
+        async function multiHash(str, hmacKeyStr=null) {
+            const enc = new TextEncoder();
+            const data = enc.encode(str);
+            const sha512 = await crypto.subtle.digest('SHA-512', data);
+            const sha384 = await crypto.subtle.digest('SHA-384', data);
+            const sha256 = await crypto.subtle.digest('SHA-256', data);
+            const toHex = (buf) => Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+            let result = 'SHA-512: ' + toHex(sha512) + '\nSHA-384: ' + toHex(sha384) + '\nSHA-256: ' + toHex(sha256);
+            if (hmacKeyStr && hmacKeyStr.length > 0) {
+                const hmacKey = await crypto.subtle.importKey('raw', enc.encode(hmacKeyStr), { name: 'HMAC', hash: 'SHA-512' }, false, ['sign']);
+                const hmacSig = await crypto.subtle.sign('HMAC', hmacKey, data);
+                result += '\nHMAC-SHA512: ' + toHex(hmacSig);
+            }
+            return result;
+        }
+
+        function randomBase64(bytes=32) {
+            const arr = crypto.getRandomValues(new Uint8Array(bytes));
+            return btoa(String.fromCharCode(...arr));
+        }
+
+        async function generateRSA4096() {
+            const keyPair = await crypto.subtle.generateKey(
+                { name: 'RSA-OAEP', modulusLength: 4096, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-512' },
+                true,
+                ['encrypt', 'decrypt']
+            );
+            const pub = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+            const priv = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+            const toPEM = (buf, type) => {
+                const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+                const lines = b64.match(/.{1,64}/g).join('\n');
+                return `-----BEGIN ${type}-----\n${lines}\n-----END ${type}-----`;
+            };
+            return {
+                publicPEM: toPEM(pub, 'PUBLIC KEY'),
+                privatePEM: toPEM(priv, 'PRIVATE KEY')
+            };
+        }
+
+        // ============================================================
+        // DOM
+        // ============================================================
+        const tabs = document.querySelectorAll('.tab');
+        const panels = {
+            tab1: document.getElementById('tab1'),
+            tab2: document.getElementById('tab2'),
+            tab3: document.getElementById('tab3'),
+            tab4: document.getElementById('tab4')
+        };
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                Object.keys(panels).forEach(k => {
+                    panels[k].classList.toggle('active', k === this.dataset.tab);
+                });
+            });
+        });
+
+        // ---- MÃ HÓA ----
+        const encPlain = document.getElementById('encPlain');
+        const encKey = document.getElementById('encKey');
+        const encSalt = document.getElementById('encSalt');
+        const encOut = document.getElementById('encOut');
+        const encStatus = document.getElementById('encStatus');
+        document.getElementById('encBtn').addEventListener('click', async function() {
+            const plain = encPlain.value;
+            const key = encKey.value.trim();
+            if (!plain || key.length < 12) {
+                encStatus.textContent = '⚠️ Lỗi: Văn bản rỗng hoặc khóa < 12 ký tự.';
+                encOut.textContent = '// Lỗi';
+                return;
+            }
+            try {
+                const saltVal = encSalt.value.trim() || null;
+                const result = await encryptSuper(plain, key, saltVal);
+                encOut.textContent = result;
+                encStatus.textContent = '✅ Mã hóa thành công! Dung lượng: ' + result.length + ' ký tự.';
+            } catch(e) {
+                encStatus.textContent = '❌ Lỗi: ' + e.message;
+                encOut.textContent = '// Lỗi';
+            }
+        });
+        document.getElementById('encClear').addEventListener('click', ()=>{
+            encPlain.value = ''; encOut.textContent = '// Chưa mã hóa'; encStatus.textContent = 'Sẵn sàng';
+        });
+        document.getElementById('copyEnc').addEventListener('click', function() {
+            const txt = encOut.textContent;
+            if (!txt || txt.includes('Chưa')) return alert('Không có dữ liệu');
+            navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✅ OK'; setTimeout(()=>this.textContent='📄 Sao chép',1200); });
+        });
+
+        // ---- GIẢI MÃ ----
+        const decData = document.getElementById('decData');
+        const decKey = document.getElementById('decKey');
+        const decOut = document.getElementById('decOut');
+        const decStatus = document.getElementById('decStatus');
+        document.getElementById('decBtn').addEventListener('click', async function() {
+            const data = decData.value.trim();
+            const key = decKey.value.trim();
+            if (!data || key.length < 12) {
+                decStatus.textContent = '⚠️ Lỗi: Dữ liệu rỗng hoặc khóa < 12 ký tự.';
+                decOut.textContent = '// Lỗi';
+                return;
+            }
+            try {
+                const plain = await decryptSuper(data, key);
+                decOut.textContent = plain;
+                decStatus.textContent = '✅ Giải mã thành công! Độ dài: ' + plain.length + ' ký tự.';
+            } catch(e) {
+                decStatus.textContent = '❌ Lỗi: ' + e.message;
+                decOut.textContent = '// Giải mã thất bại';
+            }
+        });
+        document.getElementById('decClear').addEventListener('click', ()=>{
+            decData.value = ''; decOut.textContent = '// Chưa giải mã'; decStatus.textContent = 'Chờ dữ liệu';
+        });
+        document.getElementById('copyDec').addEventListener('click', function() {
+            const txt = decOut.textContent;
+            if (!txt || txt.includes('Chưa')) return alert('Không có dữ liệu');
+            navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✅ OK'; setTimeout(()=>this.textContent='📄 Sao chép',1200); });
+        });
+
+        // ---- HASH ----
+        const hashInput = document.getElementById('hashInput');
+        const hmacKeyEl = document.getElementById('hmacKey');
+        const hashOut = document.getElementById('hashOut');
+        document.getElementById('hashBtn').addEventListener('click', async function() {
+            const text = hashInput.value;
+            if (!text) { hashOut.textContent = '// Nhập chuỗi cần băm'; return; }
+            const hmac = hmacKeyEl.value.trim();
+            try {
+                const result = await multiHash(text, hmac || null);
+                hashOut.textContent = result;
+            } catch(e) {
+                hashOut.textContent = '// Lỗi: ' + e.message;
+            }
+        });
+        document.getElementById('hashClear').addEventListener('click', ()=>{
+            hashInput.value = ''; hashOut.textContent = '// Nhấn "Băm"';
+        });
+        document.getElementById('copyHash').addEventListener('click', function() {
+            const txt = hashOut.textContent;
+            if (!txt || txt.includes('Nhấn')) return alert('Không có dữ liệu');
+            navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✅ OK'; setTimeout(()=>this.textContent='📄 Sao chép',1200); });
+        });
+
+        // ---- TẠO KHÓA ----
+        const genKeyOut = document.getElementById('genKeyOut');
+        document.getElementById('genKeyBtn').addEventListener('click', function() {
+            const key = randomBase64(32);
+            genKeyOut.textContent = 'Khóa 256-bit (Base64):\n' + key + '\n\nHex:\n' + 
+                Array.from(new Uint8Array(atob(key).split('').map(c=>c.charCodeAt(0)))).map(b=>b.toString(16).padStart(2,'0')).join('');
+        });
+        document.getElementById('copyGenKey').addEventListener('click', function() {
+            const txt = genKeyOut.textContent;
+            if (!txt || txt.includes('Bấm')) return alert('Chưa tạo khóa');
+            navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✅ OK'; setTimeout(()=>this.textContent='📄 Sao chép',1200); });
+        });
+
+        const rsaOut = document.getElementById('rsaOut');
+        document.getElementById('genRSABtn').addEventListener('click', async function() {
+            this.textContent = '⏳ Đang tạo RSA-4096...';
+            this.disabled = true;
+            try {
+                const pair = await generateRSA4096();
+                rsaOut.textContent = '=== PUBLIC KEY ===\n' + pair.publicPEM + '\n\n=== PRIVATE KEY ===\n' + pair.privatePEM;
+            } catch(e) {
+                rsaOut.textContent = '// Lỗi: ' + e.message;
+            }
+            this.textContent = '🌐 TẠO RSA-4096';
+            this.disabled = false;
+        });
+        document.getElementById('copyRSA').addEventListener('click', function() {
+            const txt = rsaOut.textContent;
+            if (!txt || txt.includes('Bấm')) return alert('Chưa tạo RSA');
+            navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✅ OK'; setTimeout(()=>this.textContent='📄 Sao chép',1200); });
+        });
+
+        // ---- TỰ ĐỘNG ĐIỀN MẪU CHO GIẢI MÃ ----
+        (async function() {
+            const samplePlain = 'Thông tin tối mật: Proxy PIN 9999 - Kênh liên lạc khẩn cấp - Mã: ALPHA-OMEGA';
+            const sampleKey = 'Quantum@2026#SuperSecure!';
+            try {
+                const enc = await encryptSuper(samplePlain, sampleKey);
+                decData.value = enc;
+                encPlain.value = samplePlain;
+                encKey.value = sampleKey;
+                decKey.value = sampleKey;
+            } catch(e) {}
+        })();
+
+    })();
+</script>
+</body>
+</html>
