@@ -14,45 +14,99 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a2e, #1a0a3e, #0d1b2a);
+            background: #0b0e1a;
             color: #fff;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* ===== FALLING EFFECTS ===== */
-        #falling-container {
+        /* Nền động */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: orbMove 20s ease-in-out infinite alternate;
+        }
+
+        .bg-animation .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: #6c5ce7;
+            top: -10%;
+            left: -10%;
+            animation-duration: 25s;
+        }
+
+        .bg-animation .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #00b894;
+            bottom: -10%;
+            right: -10%;
+            animation-duration: 30s;
+            animation-delay: 2s;
+        }
+
+        .bg-animation .orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: #fd79a8;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 20s;
+            animation-delay: 4s;
+        }
+
+        @keyframes orbMove {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -80px) scale(1.2); }
+            66% { transform: translate(-60px, 120px) scale(0.8); }
+            100% { transform: translate(80px, -40px) scale(1.1); }
+        }
+
+        /* ===== PARTICLE ===== */
+        .particle-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 1;
             overflow: hidden;
         }
 
-        .falling-item {
+        .particle {
             position: absolute;
-            top: -50px;
-            font-size: 24px;
-            animation: fall linear infinite;
-            opacity: 0.4;
-            user-select: none;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
         }
 
-        @keyframes fall {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(1);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(110vh) rotate(720deg) scale(0.3);
-                opacity: 0;
-            }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
         /* ===== MAIN CONTAINER ===== */
@@ -70,71 +124,76 @@
         }
 
         .header .logo {
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 900;
-            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-            letter-spacing: 3px;
+            color: #fff;
+            letter-spacing: 4px;
             position: relative;
             display: inline-block;
         }
 
+        .header .logo .highlight {
+            background: linear-gradient(90deg, #6c5ce7, #00b894, #fd79a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .header .logo i {
+            color: #6c5ce7;
+            margin-right: 12px;
             -webkit-text-fill-color: initial;
-            color: #ffd93d;
-            margin-right: 10px;
         }
 
-        .header .logo::after {
-            content: '⚡';
-            position: absolute;
-            right: -40px;
-            top: -10px;
-            font-size: 24px;
+        .header .logo .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00b894;
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: dotPulse 2s infinite;
             -webkit-text-fill-color: initial;
-            color: #ffd93d;
-            animation: spark 1.5s infinite;
         }
 
-        @keyframes spark {
+        @keyframes dotPulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.3); }
+            50% { opacity: 0.3; transform: scale(0.5); }
         }
 
         .header .subtitle {
-            color: rgba(255,255,255,0.4);
-            font-size: 15px;
-            letter-spacing: 5px;
-            margin-top: 5px;
+            color: rgba(255,255,255,0.35);
+            font-size: 14px;
+            letter-spacing: 6px;
+            margin-top: 8px;
+            font-weight: 300;
         }
 
         .header .subtitle i {
-            color: #ff6b6b;
-            margin: 0 5px;
+            color: #fd79a8;
+            margin: 0 6px;
         }
 
         .header .version {
             display: inline-block;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.04);
             border-radius: 20px;
-            padding: 2px 14px;
+            padding: 3px 16px;
             font-size: 10px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.2);
             letter-spacing: 2px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         /* ===== TOOL BOX ===== */
         .tool-box {
             background: rgba(255,255,255,0.02);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 28px;
             padding: 40px;
             border: 1px solid rgba(255,255,255,0.03);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
         }
@@ -146,14 +205,15 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #a855f7, #ff6b6b);
-            border-radius: 26px;
+            background: linear-gradient(45deg, #6c5ce7, #00b894, #fd79a8, #6c5ce7);
+            border-radius: 30px;
             z-index: -1;
             background-size: 400% 400%;
-            animation: gradientBorder 6s ease infinite;
+            animation: borderGlow 6s ease infinite;
+            opacity: 0.4;
         }
 
-        @keyframes gradientBorder {
+        @keyframes borderGlow {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
@@ -173,7 +233,7 @@
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.03);
             border-radius: 12px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.35);
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
@@ -181,22 +241,23 @@
             flex: 1;
             min-width: 120px;
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .tab-btn:hover {
-            border-color: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.06);
             color: #fff;
         }
 
         .tab-btn.active {
-            background: linear-gradient(90deg, rgba(255,107,107,0.15), rgba(77,150,255,0.15));
-            border-color: #4d96ff;
+            background: rgba(108, 92, 231, 0.12);
+            border-color: #6c5ce7;
             color: #fff;
-            box-shadow: 0 0 40px rgba(77,150,255,0.03);
+            box-shadow: 0 0 40px rgba(108, 92, 231, 0.05);
         }
 
         .tab-btn i {
-            margin-right: 8px;
+            margin-right: 10px;
         }
 
         /* ===== TEXTAREA ===== */
@@ -208,14 +269,14 @@
             display: block;
             font-weight: 600;
             margin-bottom: 10px;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.5);
             font-size: 13px;
             letter-spacing: 0.5px;
         }
 
         .input-area label i {
             margin-right: 8px;
-            color: #4d96ff;
+            color: #6c5ce7;
         }
 
         .input-area textarea {
@@ -224,8 +285,8 @@
             padding: 18px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 12px;
-            color: #fff;
+            border-radius: 14px;
+            color: #e0e0e0;
             font-size: 15px;
             font-family: 'Consolas', 'Courier New', monospace;
             resize: vertical;
@@ -234,14 +295,14 @@
         }
 
         .input-area textarea:focus {
-            border-color: #4d96ff;
+            border-color: #6c5ce7;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(77,150,255,0.03);
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.04);
             background: rgba(255,255,255,0.04);
         }
 
         .input-area textarea::placeholder {
-            color: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.08);
         }
 
         /* ===== BUTTONS ===== */
@@ -255,7 +316,7 @@
         .btn {
             padding: 14px 35px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 700;
             font-size: 14px;
             cursor: pointer;
@@ -276,7 +337,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
             opacity: 0;
             transition: 0.5s;
         }
@@ -286,25 +347,25 @@
         }
 
         .btn-encode {
-            background: linear-gradient(135deg, #4d96ff, #6bcb77);
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(77,150,255,0.15);
+            box-shadow: 0 4px 25px rgba(108, 92, 231, 0.2);
         }
 
         .btn-encode:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(77,150,255,0.25);
+            box-shadow: 0 12px 45px rgba(108, 92, 231, 0.3);
         }
 
         .btn-decode {
-            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            background: linear-gradient(135deg, #00b894, #55efc4);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(255,107,107,0.15);
+            box-shadow: 0 4px 25px rgba(0, 184, 148, 0.2);
         }
 
         .btn-decode:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(255,107,107,0.25);
+            box-shadow: 0 12px 45px rgba(0, 184, 148, 0.3);
         }
 
         .btn-copy {
@@ -321,7 +382,7 @@
         .btn-clear {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.25);
         }
 
         .btn-clear:hover {
@@ -330,26 +391,22 @@
         }
 
         .btn:disabled {
-            opacity: 0.4;
+            opacity: 0.3;
             cursor: not-allowed;
             transform: none !important;
         }
 
         /* ===== OUTPUT ===== */
-        .output-area {
-            position: relative;
-        }
-
         .output-area textarea {
             min-height: 200px;
-            background: rgba(0,0,0,0.25);
+            background: rgba(0,0,0,0.2);
             border-color: rgba(255,255,255,0.02);
-            color: #6bcb77;
+            color: #55efc4;
         }
 
         .output-area textarea:focus {
-            border-color: #6bcb77;
-            box-shadow: 0 0 0 4px rgba(107,203,119,0.03);
+            border-color: #55efc4;
+            box-shadow: 0 0 0 4px rgba(85, 239, 196, 0.04);
         }
 
         /* ===== STATS ===== */
@@ -367,11 +424,11 @@
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.25);
         }
 
         .stats .stat-item i {
-            color: #4d96ff;
+            color: #6c5ce7;
         }
 
         .stats .stat-item .num {
@@ -379,57 +436,59 @@
             font-weight: 600;
         }
 
+        .stats .stat-item .badge {
+            display: inline-block;
+            background: rgba(253, 121, 168, 0.08);
+            border: 1px solid rgba(253, 121, 168, 0.1);
+            border-radius: 12px;
+            padding: 1px 12px;
+            font-size: 9px;
+            color: #fd79a8;
+            letter-spacing: 1px;
+        }
+
         /* ===== NOTIFICATION ===== */
         .notification {
             position: fixed;
             top: 30px;
             right: 30px;
-            padding: 15px 25px;
-            border-radius: 12px;
+            padding: 16px 28px;
+            border-radius: 14px;
             font-weight: 600;
             z-index: 10000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            animation: slideIn 0.5s ease;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-width: 420px;
             font-size: 14px;
+            backdrop-filter: blur(20px);
         }
 
         .notification.success {
-            background: linear-gradient(135deg, #6bcb77, #2d7d46);
-            color: #fff;
+            background: rgba(0, 184, 148, 0.15);
+            border: 1px solid rgba(0, 184, 148, 0.15);
+            color: #55efc4;
         }
 
         .notification.error {
-            background: linear-gradient(135deg, #ff6b6b, #cc3333);
-            color: #fff;
+            background: rgba(253, 121, 168, 0.12);
+            border: 1px solid rgba(253, 121, 168, 0.1);
+            color: #fd79a8;
         }
 
         .notification.info {
-            background: linear-gradient(135deg, #4d96ff, #1a4a8a);
-            color: #fff;
+            background: rgba(108, 92, 231, 0.12);
+            border: 1px solid rgba(108, 92, 231, 0.1);
+            color: #a29bfe;
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from { transform: translateX(100%) scale(0.9); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
         }
 
         @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        /* ===== ENCRYPTION LEVEL ===== */
-        .level-badge {
-            display: inline-block;
-            background: rgba(255,215,0,0.06);
-            border: 1px solid rgba(255,215,0,0.08);
-            border-radius: 20px;
-            padding: 2px 16px;
-            font-size: 10px;
-            color: #ffd93d;
-            letter-spacing: 1px;
-            margin-left: 10px;
+            from { transform: translateX(0) scale(1); opacity: 1; }
+            to { transform: translateX(100%) scale(0.9); opacity: 0; }
         }
 
         /* ===== RESPONSIVE ===== */
@@ -471,7 +530,7 @@
 
             .tool-box {
                 padding: 20px 15px;
-                border-radius: 16px;
+                border-radius: 20px;
             }
 
             .header .logo {
@@ -500,8 +559,15 @@
 </head>
 <body>
 
-<!-- ===== FALLING EFFECTS ===== -->
-<div id="falling-container"></div>
+<!-- Nền động -->
+<div class="bg-animation">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+</div>
+
+<!-- Particle -->
+<div class="particle-container" id="particleContainer"></div>
 
 <!-- ===== NOTIFICATION ===== -->
 <div id="notification"></div>
@@ -511,11 +577,12 @@
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <i class="fas fa-shield-halved"></i> THAILE PRO
+            <i class="fas fa-shield-halved"></i>
+            <span class="highlight">NP</span> MÃ HOÁ
+            <span class="dot"></span>
         </div>
         <div class="subtitle">
-            <i class="fas fa-lock"></i> MÃ HÓA & GIẢI MÃ CODE <i class="fas fa-unlock"></i>
-            <span class="level-badge"><i class="fas fa-bolt"></i> CẤP ĐỘ 3X</span>
+            <i class="fas fa-lock"></i> MÃ HÓA · GIẢI MÃ <i class="fas fa-unlock"></i>
         </div>
         <div class="version">v3.0 · BẢO MẬT NÂNG CAO</div>
     </div>
@@ -579,7 +646,8 @@
                 <i class="fas fa-arrow-left-arrow-right"></i> Giải mã: <span class="num" id="decodeCount">0</span>
             </div>
             <div class="stat-item">
-                <i class="fas fa-shield"></i> Bảo mật: <span class="num" style="color:#ffd93d;">3X</span>
+                <i class="fas fa-shield"></i> Bảo mật: <span class="num" style="color:#fd79a8;">3X</span>
+                <span class="badge">NÂNG CAO</span>
             </div>
         </div>
     </div>
@@ -587,32 +655,24 @@
 
 <script>
     // ============================================================
-    // 🔐 THAILE PRO - MÃ HÓA & GIẢI MÃ CẤP ĐỘ 3X
+    // 🔐 NP MÃ HOÁ - MÃ HÓA & GIẢI MÃ CẤP ĐỘ 3X
     // ============================================================
 
-    // ===== FALLING EFFECTS =====
-    const emojis = ['🔒', '🔑', '⚡', '💻', '🛡️', '🔐', '⚙️', '🔧', '📀', '💾', '🖥️', '⌨️', '🖱️', '📱', '💡', '🌟', '✨', '🎯', '🔥', '🌀', '⚡'];
-    
-    function createFallingItem() {
-        const container = document.getElementById('falling-container');
-        const el = document.createElement('div');
-        el.className = 'falling-item';
-        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.left = Math.random() * 100 + '%';
-        el.style.fontSize = (18 + Math.random() * 28) + 'px';
-        el.style.animationDuration = (10 + Math.random() * 18) + 's';
-        el.style.animationDelay = (Math.random() * 4) + 's';
-        container.appendChild(el);
-        
-        setTimeout(() => {
-            el.remove();
-        }, 30000);
-    }
-
-    setInterval(createFallingItem, 350);
-    for (let i = 0; i < 20; i++) {
-        setTimeout(createFallingItem, i * 200);
-    }
+    // ===== PARTICLE EFFECT =====
+    (function createParticles() {
+        const container = document.getElementById('particleContainer');
+        for (let i = 0; i < 60; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = (1 + Math.random() * 4) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.animationDuration = (15 + Math.random() * 30) + 's';
+            particle.style.animationDelay = (Math.random() * 20) + 's';
+            particle.style.opacity = 0.1 + Math.random() * 0.3;
+            container.appendChild(particle);
+        }
+    })();
 
     // ===== STATE =====
     let currentTab = 'encode';
@@ -650,66 +710,64 @@
     }
 
     // ============================================================
-    // 🔐 ENCODE 3X - MÃ HÓA CẤP ĐỘ 3 LẦN
+    // 🔐 ENCODE 3X
     // ============================================================
     function encodeCode(text) {
         let result = text;
         
-        // === LẦN 1: Base64 + XOR ===
+        // LẦN 1: Base64 + XOR
         let encoded1 = btoa(unescape(encodeURIComponent(result)));
-        let xorKey1 = 'THAILE_PRO_3X';
+        let xorKey1 = 'NP_MA_HOA_3X';
         let xorResult1 = '';
         for (let i = 0; i < encoded1.length; i++) {
             xorResult1 += String.fromCharCode(encoded1.charCodeAt(i) ^ xorKey1.charCodeAt(i % xorKey1.length));
         }
         let base64Xor1 = btoa(xorResult1);
         
-        // === LẦN 2: Đảo ngược + Salt ===
+        // LẦN 2: Đảo ngược + Salt
         let reversed = base64Xor1.split('').reverse().join('');
         let salt = Math.random().toString(36).substring(2, 10);
         let salted = salt + '|' + reversed + '|' + salt.split('').reverse().join('');
         
-        // === LẦN 3: XOR lần 2 + Prefix/Suffix ===
-        let xorKey2 = 'THL_ELH_2026';
+        // LẦN 3: XOR lần 2 + Prefix/Suffix
+        let xorKey2 = 'NP_2026_PRO';
         let xorResult2 = '';
         for (let i = 0; i < salted.length; i++) {
             xorResult2 += String.fromCharCode(salted.charCodeAt(i) ^ xorKey2.charCodeAt(i % xorKey2.length));
         }
         let final = btoa(xorResult2);
         
-        // Thêm prefix/suffix đặc trưng
-        return '⚡THL⚡' + final + '⚡ELH⚡';
+        return '⚡NP⚡' + final + '⚡END⚡';
     }
 
     // ============================================================
-    // 🔓 DECODE 3X - GIẢI MÃ CẤP ĐỘ 3 LẦN
+    // 🔓 DECODE 3X
     // ============================================================
     function decodeCode(text) {
         try {
             let result = text.trim();
             
-            // Xóa prefix/suffix
-            if (result.startsWith('⚡THL⚡') && result.endsWith('⚡ELH⚡')) {
-                result = result.slice(7, -7);
+            if (result.startsWith('⚡NP⚡') && result.endsWith('⚡END⚡')) {
+                result = result.slice(6, -7);
             }
             
-            // === GIẢI LẦN 3: Base64 decode + XOR lần 2 ===
+            // GIẢI LẦN 3
             let decoded3 = atob(result);
-            let xorKey2 = 'THL_ELH_2026';
+            let xorKey2 = 'NP_2026_PRO';
             let xorResult2 = '';
             for (let i = 0; i < decoded3.length; i++) {
                 xorResult2 += String.fromCharCode(decoded3.charCodeAt(i) ^ xorKey2.charCodeAt(i % xorKey2.length));
             }
             
-            // === GIẢI LẦN 2: Bỏ salt + đảo ngược ===
+            // GIẢI LẦN 2
             let parts = xorResult2.split('|');
             if (parts.length < 3) throw new Error('Dữ liệu không hợp lệ');
             let reversed = parts[1];
             let unsalted = reversed.split('').reverse().join('');
             
-            // === GIẢI LẦN 1: Base64 decode + XOR lần 1 ===
+            // GIẢI LẦN 1
             let decoded1 = atob(unsalted);
-            let xorKey1 = 'THAILE_PRO_3X';
+            let xorKey1 = 'NP_MA_HOA_3X';
             let xorResult1 = '';
             for (let i = 0; i < decoded1.length; i++) {
                 xorResult1 += String.fromCharCode(decoded1.charCodeAt(i) ^ xorKey1.charCodeAt(i % xorKey1.length));
@@ -723,7 +781,7 @@
     }
 
     // ============================================================
-    // ⚡ XỬ LÝ CHÍNH
+    // ⚡ XỬ LÝ
     // ============================================================
     function processCode() {
         const input = document.getElementById('inputText').value;
@@ -734,7 +792,6 @@
         }
 
         let result;
-        let isSuccess = true;
         let message = '';
 
         if (currentTab === 'encode') {
@@ -809,7 +866,7 @@
         
         clearTimeout(notif._timeout);
         notif._timeout = setTimeout(() => {
-            notif.style.animation = 'slideOut 0.5s ease forwards';
+            notif.style.animation = 'slideOut 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
             setTimeout(() => {
                 notif.style.display = 'none';
                 notif.style.animation = '';
@@ -836,10 +893,10 @@
     // ============================================================
     function autoDetect() {
         const input = document.getElementById('inputText').value;
-        if (input.startsWith('⚡THL⚡') && input.endsWith('⚡ELH⚡')) {
+        if (input.startsWith('⚡NP⚡') && input.endsWith('⚡END⚡')) {
             if (currentTab === 'encode') {
                 switchTab('decode');
-                showNotification('🔍 Phát hiện code đã mã hóa! Chuyển sang chế độ giải mã 3X.', 'info');
+                showNotification('🔍 Phát hiện code đã mã hóa! Chuyển sang chế độ giải mã.', 'info');
             }
         }
     }
@@ -856,22 +913,13 @@
     // ============================================================
     updateStats();
     
-    // ============================================================
-    // 🤖 ẨN DẤU AI - KHÔNG ĐỂ LỘ
-    // ============================================================
-    // Mọi dấu vết AI đã được xóa bỏ hoàn toàn
-    // Code được viết thủ công 100%, không sử dụng AI
-    // Tất cả thuật toán đều được tối ưu hóa bằng tay
-    // ============================================================
-    
-    console.log('🛡️ THAILE PRO - Mã Hóa & Giải Mã 3X');
+    console.log('🛡️ NP MÃ HOÁ - Mã Hóa & Giải Mã 3X');
     console.log('📝 Hướng dẫn:');
     console.log('  1. Chọn tab Mã Hóa hoặc Giải Mã');
     console.log('  2. Nhập code vào ô trên');
     console.log('  3. Nhấn Enter hoặc nút tương ứng');
     console.log('  4. Kết quả hiển thị ở ô dưới');
     console.log('💡 Phím tắt: Ctrl+Enter để xử lý, Ctrl+Shift+C để sao chép');
-    console.log('⚡ Cấp độ bảo mật: 3X (gấp 3 lần so với bản thường)');
 </script>
 
 </body>
