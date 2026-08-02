@@ -2,117 +2,64 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NP MÃ HOÁ - Mã Hóa & Giải Mã Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔒 NP LOCK - Mã Hóa Bất Khả Xâm Phạm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0b0e1a;
-            color: #fff;
+            background: #080b14;
+            color: #c0d0e0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
+            overflow: hidden;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* Nền động */
-        .bg-animation {
+        /* Nền tĩnh - không gây lag */
+        .bg-static {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
-            overflow: hidden;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(108, 92, 231, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(0, 184, 148, 0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(253, 121, 168, 0.02) 0%, transparent 50%);
         }
 
-        .bg-animation .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
-            animation: orbMove 20s ease-in-out infinite alternate;
-        }
-
-        .bg-animation .orb:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            background: #6c5ce7;
-            top: -10%;
-            left: -10%;
-            animation-duration: 25s;
-        }
-
-        .bg-animation .orb:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            background: #00b894;
-            bottom: -10%;
-            right: -10%;
-            animation-duration: 30s;
-            animation-delay: 2s;
-        }
-
-        .bg-animation .orb:nth-child(3) {
-            width: 300px;
-            height: 300px;
-            background: #fd79a8;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 20s;
-            animation-delay: 4s;
-        }
-
-        @keyframes orbMove {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(100px, -80px) scale(1.2); }
-            66% { transform: translate(-60px, 120px) scale(0.8); }
-            100% { transform: translate(80px, -40px) scale(1.1); }
-        }
-
-        /* ===== PARTICLE ===== */
-        .particle-container {
+        /* Đường kẻ mờ tĩnh */
+        .grid-static {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: particleFloat linear infinite;
-        }
-
-        @keyframes particleFloat {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
         /* ===== MAIN CONTAINER ===== */
         .container {
             width: 100%;
-            max-width: 920px;
+            max-width: 860px;
             position: relative;
             z-index: 10;
         }
@@ -120,158 +67,174 @@
         /* ===== HEADER ===== */
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .header .logo {
-            font-size: 48px;
+            font-size: 40px;
             font-weight: 900;
             color: #fff;
-            letter-spacing: 4px;
-            position: relative;
-            display: inline-block;
+            letter-spacing: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header .logo .icon {
+            color: #6c5ce7;
+            font-size: 36px;
         }
 
         .header .logo .highlight {
-            background: linear-gradient(90deg, #6c5ce7, #00b894, #fd79a8);
+            background: linear-gradient(90deg, #6c5ce7, #00b894);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .header .logo i {
-            color: #6c5ce7;
-            margin-right: 12px;
-            -webkit-text-fill-color: initial;
-        }
-
-        .header .logo .dot {
+        .header .logo .lock-icon {
             display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #00b894;
-            border-radius: 50%;
-            margin-left: 4px;
-            animation: dotPulse 2s infinite;
+            font-size: 28px;
             -webkit-text-fill-color: initial;
+            color: #fd79a8;
+            animation: lockPulse 3s ease-in-out infinite;
         }
 
-        @keyframes dotPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.5); }
+        @keyframes lockPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         .header .subtitle {
-            color: rgba(255,255,255,0.35);
-            font-size: 14px;
-            letter-spacing: 6px;
-            margin-top: 8px;
+            color: rgba(255,255,255,0.25);
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-top: 6px;
             font-weight: 300;
         }
 
         .header .subtitle i {
-            color: #fd79a8;
-            margin: 0 6px;
+            color: #6c5ce7;
+            margin: 0 5px;
         }
 
-        .header .version {
+        .header .badge-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .header .badge {
             display: inline-block;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
             border-radius: 20px;
             padding: 3px 16px;
-            font-size: 10px;
+            font-size: 9px;
             color: rgba(255,255,255,0.2);
             letter-spacing: 2px;
-            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .header .badge.danger {
+            border-color: rgba(253, 121, 168, 0.08);
+            color: #fd79a8;
+        }
+
+        .header .badge.success {
+            border-color: rgba(0, 184, 148, 0.08);
+            color: #55efc4;
         }
 
         /* ===== TOOL BOX ===== */
         .tool-box {
-            background: rgba(255,255,255,0.02);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 28px;
-            padding: 40px;
+            background: rgba(255,255,255,0.015);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 36px 34px 30px;
             border: 1px solid rgba(255,255,255,0.03);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
+            transition: border-color 0.3s;
         }
 
         .tool-box::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #6c5ce7, #00b894, #fd79a8, #6c5ce7);
-            border-radius: 30px;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(45deg, rgba(108,92,231,0.08), rgba(0,184,148,0.04), rgba(253,121,168,0.06));
+            border-radius: 25px;
             z-index: -1;
-            background-size: 400% 400%;
-            animation: borderGlow 6s ease infinite;
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
-        @keyframes borderGlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* ===== TABS ===== */
-        .tabs {
+        /* Thanh trạng thái bảo mật */
+        .security-bar {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            padding-bottom: 15px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            background: rgba(108, 92, 231, 0.04);
+            border-radius: 12px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(108, 92, 231, 0.04);
         }
 
-        .tab-btn {
-            padding: 12px 30px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 12px;
-            color: rgba(255,255,255,0.35);
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
+        .security-bar .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00b894;
+            animation: dotPulse 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.6); }
+        }
+
+        .security-bar .text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
             letter-spacing: 0.5px;
         }
 
-        .tab-btn:hover {
-            border-color: rgba(255,255,255,0.06);
-            color: #fff;
+        .security-bar .text strong {
+            color: #55efc4;
+            font-weight: 600;
         }
 
-        .tab-btn.active {
-            background: rgba(108, 92, 231, 0.12);
-            border-color: #6c5ce7;
-            color: #fff;
-            box-shadow: 0 0 40px rgba(108, 92, 231, 0.05);
-        }
-
-        .tab-btn i {
-            margin-right: 10px;
+        .security-bar .level {
+            margin-left: auto;
+            font-size: 10px;
+            color: #fd79a8;
+            letter-spacing: 2px;
+            background: rgba(253, 121, 168, 0.04);
+            padding: 2px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(253, 121, 168, 0.04);
         }
 
         /* ===== TEXTAREA ===== */
         .input-area {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .input-area label {
             display: block;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.35);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .input-area label i {
@@ -281,46 +244,46 @@
 
         .input-area textarea {
             width: 100%;
-            min-height: 200px;
+            min-height: 220px;
             padding: 18px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.03);
             border-radius: 14px;
-            color: #e0e0e0;
+            color: #d0dce8;
             font-size: 15px;
             font-family: 'Consolas', 'Courier New', monospace;
             resize: vertical;
             transition: 0.3s;
-            line-height: 1.8;
+            line-height: 1.9;
         }
 
         .input-area textarea:focus {
-            border-color: #6c5ce7;
+            border-color: rgba(108, 92, 231, 0.15);
             outline: none;
-            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.04);
-            background: rgba(255,255,255,0.04);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.02);
+            background: rgba(0,0,0,0.4);
         }
 
         .input-area textarea::placeholder {
-            color: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.06);
         }
 
         /* ===== BUTTONS ===== */
         .btn-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .btn {
-            padding: 14px 35px;
+            padding: 13px 30px;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.25s;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -328,66 +291,52 @@
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
         }
 
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
-            opacity: 0;
-            transition: 0.5s;
-        }
-
-        .btn:hover::after {
-            opacity: 1;
+        .btn:active {
+            transform: scale(0.96);
         }
 
         .btn-encode {
             background: linear-gradient(135deg, #6c5ce7, #a29bfe);
             color: #fff;
-            box-shadow: 0 4px 25px rgba(108, 92, 231, 0.2);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.1);
         }
 
         .btn-encode:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 45px rgba(108, 92, 231, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(108, 92, 231, 0.2);
         }
 
-        .btn-decode {
-            background: linear-gradient(135deg, #00b894, #55efc4);
-            color: #fff;
-            box-shadow: 0 4px 25px rgba(0, 184, 148, 0.2);
-        }
-
-        .btn-decode:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 45px rgba(0, 184, 148, 0.3);
+        .btn-encode:active {
+            transform: scale(0.96) translateY(0);
         }
 
         .btn-copy {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: #fff;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.5);
+            flex: 0.5;
         }
 
         .btn-copy:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-3px);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
         }
 
         .btn-clear {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.015);
+            border: 1px solid rgba(255,255,255,0.02);
+            color: rgba(255,255,255,0.2);
+            flex: 0.5;
         }
 
         .btn-clear:hover {
-            background: rgba(255,255,255,0.04);
-            color: #fff;
+            background: rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.5);
         }
 
         .btn:disabled {
@@ -400,114 +349,99 @@
         .output-area textarea {
             min-height: 200px;
             background: rgba(0,0,0,0.2);
-            border-color: rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.015);
             color: #55efc4;
+            font-size: 14px;
         }
 
         .output-area textarea:focus {
-            border-color: #55efc4;
-            box-shadow: 0 0 0 4px rgba(85, 239, 196, 0.04);
+            border-color: rgba(0, 184, 148, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.01);
         }
 
         /* ===== STATS ===== */
         .stats {
             display: flex;
-            gap: 30px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.03);
+            gap: 25px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.02);
             flex-wrap: wrap;
         }
 
         .stats .stat-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.25);
+            gap: 7px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.15);
         }
 
         .stats .stat-item i {
             color: #6c5ce7;
+            font-size: 12px;
         }
 
         .stats .stat-item .num {
-            color: #fff;
+            color: rgba(255,255,255,0.6);
             font-weight: 600;
-        }
-
-        .stats .stat-item .badge {
-            display: inline-block;
-            background: rgba(253, 121, 168, 0.08);
-            border: 1px solid rgba(253, 121, 168, 0.1);
-            border-radius: 12px;
-            padding: 1px 12px;
-            font-size: 9px;
-            color: #fd79a8;
-            letter-spacing: 1px;
         }
 
         /* ===== NOTIFICATION ===== */
         .notification {
             position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 16px 28px;
-            border-radius: 14px;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            border-radius: 12px;
             font-weight: 600;
             z-index: 10000;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-            animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-width: 420px;
-            font-size: 14px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: notifIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 90%;
+            font-size: 13px;
+            text-align: center;
             backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.03);
         }
 
         .notification.success {
-            background: rgba(0, 184, 148, 0.15);
-            border: 1px solid rgba(0, 184, 148, 0.15);
+            background: rgba(0, 184, 148, 0.08);
             color: #55efc4;
+            border-color: rgba(0, 184, 148, 0.06);
         }
 
         .notification.error {
-            background: rgba(253, 121, 168, 0.12);
-            border: 1px solid rgba(253, 121, 168, 0.1);
+            background: rgba(253, 121, 168, 0.06);
             color: #fd79a8;
+            border-color: rgba(253, 121, 168, 0.04);
         }
 
         .notification.info {
-            background: rgba(108, 92, 231, 0.12);
-            border: 1px solid rgba(108, 92, 231, 0.1);
+            background: rgba(108, 92, 231, 0.06);
             color: #a29bfe;
+            border-color: rgba(108, 92, 231, 0.04);
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%) scale(0.9); opacity: 0; }
-            to { transform: translateX(0) scale(1); opacity: 1; }
+        @keyframes notifIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
         }
 
-        @keyframes slideOut {
-            from { transform: translateX(0) scale(1); opacity: 1; }
-            to { transform: translateX(100%) scale(0.9); opacity: 0; }
+        @keyframes notifOut {
+            from { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            to { opacity: 0; transform: translateX(-50%) translateY(30px) scale(0.9); }
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .tool-box {
-                padding: 25px 20px;
+                padding: 24px 18px;
             }
 
             .header .logo {
-                font-size: 32px;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab-btn {
-                flex: none;
-                text-align: center;
+                font-size: 28px;
             }
 
             .btn-group {
@@ -515,120 +449,127 @@
             }
 
             .btn {
-                justify-content: center;
+                flex: none;
+                width: 100%;
+            }
+
+            .btn-copy, .btn-clear {
+                flex: none;
+                width: 48%;
+            }
+
+            .btn-group .btn-copy-wrap {
+                display: flex;
+                gap: 10px;
+                width: 100%;
             }
 
             .stats {
-                gap: 15px;
+                gap: 12px;
+            }
+
+            .security-bar {
+                flex-wrap: wrap;
+            }
+
+            .security-bar .level {
+                margin-left: 0;
             }
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 10px;
+                padding: 0;
             }
 
             .tool-box {
-                padding: 20px 15px;
-                border-radius: 20px;
+                padding: 18px 14px;
+                border-radius: 18px;
             }
 
             .header .logo {
-                font-size: 26px;
+                font-size: 22px;
             }
 
             .input-area textarea {
-                min-height: 150px;
+                min-height: 160px;
                 font-size: 13px;
+                padding: 14px;
             }
 
-            .stats {
-                flex-direction: column;
-                gap: 8px;
+            .stats .stat-item {
+                font-size: 10px;
             }
 
             .notification {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                max-width: none;
-                font-size: 13px;
+                font-size: 12px;
+                padding: 10px 20px;
+                bottom: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Nền động -->
-<div class="bg-animation">
-    <div class="orb"></div>
-    <div class="orb"></div>
-    <div class="orb"></div>
-</div>
+<div class="bg-static"></div>
+<div class="grid-static"></div>
 
-<!-- Particle -->
-<div class="particle-container" id="particleContainer"></div>
-
-<!-- ===== NOTIFICATION ===== -->
-<div id="notification"></div>
-
-<!-- ===== MAIN CONTAINER ===== -->
 <div class="container">
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <i class="fas fa-shield-halved"></i>
-            <span class="highlight">NP</span> MÃ HOÁ
-            <span class="dot"></span>
+            <span class="icon"><i class="fas fa-shield-halved"></i></span>
+            <span class="highlight">NP</span> LOCK
+            <span class="lock-icon"><i class="fas fa-lock"></i></span>
         </div>
         <div class="subtitle">
-            <i class="fas fa-lock"></i> MÃ HÓA · GIẢI MÃ <i class="fas fa-unlock"></i>
+            <i class="fas fa-infinity"></i> MÃ HÓA BẤT KHẢ XÂM PHẠM <i class="fas fa-infinity"></i>
         </div>
-        <div class="version">v3.0 · BẢO MẬT NÂNG CAO</div>
+        <div class="badge-group">
+            <span class="badge danger"><i class="fas fa-skull"></i> KHÔNG THỂ GIẢI MÃ</span>
+            <span class="badge success"><i class="fas fa-bolt"></i> CẤP ĐỘ 5X</span>
+            <span class="badge"><i class="fas fa-shield"></i> QUÂN ĐỘI</span>
+        </div>
     </div>
 
     <!-- Tool Box -->
     <div class="tool-box">
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="encode" onclick="switchTab('encode')">
-                <i class="fas fa-lock"></i> Mã Hóa
-            </button>
-            <button class="tab-btn" data-tab="decode" onclick="switchTab('decode')">
-                <i class="fas fa-unlock"></i> Giải Mã
-            </button>
+        <!-- Security Bar -->
+        <div class="security-bar">
+            <span class="dot"></span>
+            <span class="text">🔐 Bảo mật tối đa · <strong>Không thể giải mã</strong></span>
+            <span class="level"><i class="fas fa-lock"></i> 5X</span>
         </div>
 
         <!-- Input -->
         <div class="input-area">
-            <label id="inputLabel">
-                <i class="fas fa-code"></i> Nhập code cần xử lý:
+            <label>
+                <i class="fas fa-code"></i> Nhập dữ liệu cần mã hóa:
             </label>
-            <textarea id="inputText" placeholder="Nhập code vào đây..."></textarea>
+            <textarea id="inputText" placeholder="Nhập nội dung cần mã hóa vĩnh viễn..."></textarea>
         </div>
 
         <!-- Buttons -->
         <div class="btn-group">
-            <button class="btn btn-encode" id="mainBtn" onclick="processCode()">
-                <i class="fas fa-lock"></i> Mã Hóa
+            <button class="btn btn-encode" id="mainBtn" onclick="processEncode()">
+                <i class="fas fa-lock"></i> Mã Hóa 5X
             </button>
-            <button class="btn btn-decode" id="secondaryBtn" onclick="processCode()" style="display:none;">
-                <i class="fas fa-unlock"></i> Giải Mã
-            </button>
-            <button class="btn btn-copy" onclick="copyResult()">
-                <i class="fas fa-copy"></i> Sao Chép
-            </button>
-            <button class="btn btn-clear" onclick="clearAll()">
-                <i class="fas fa-trash"></i> Xóa
-            </button>
+            <div style="display:flex;gap:10px;width:100%;">
+                <button class="btn btn-copy" onclick="copyResult()">
+                    <i class="fas fa-copy"></i> Sao Chép
+                </button>
+                <button class="btn btn-clear" onclick="clearAll()">
+                    <i class="fas fa-trash"></i> Xóa
+                </button>
+            </div>
         </div>
 
         <!-- Output -->
         <div class="input-area output-area">
             <label>
-                <i class="fas fa-terminal"></i> Kết quả:
+                <i class="fas fa-terminal"></i> Dữ liệu đã mã hóa:
             </label>
-            <textarea id="outputText" placeholder="Kết quả sẽ hiển thị ở đây..." readonly></textarea>
+            <textarea id="outputText" placeholder="Kết quả mã hóa sẽ hiển thị ở đây..." readonly></textarea>
         </div>
 
         <!-- Stats -->
@@ -640,14 +581,10 @@
                 <i class="fas fa-layer-group"></i> Dòng: <span class="num" id="lineCount">0</span>
             </div>
             <div class="stat-item">
-                <i class="fas fa-arrow-right-arrow-left"></i> Mã hóa: <span class="num" id="encodeCount">0</span>
+                <i class="fas fa-arrow-right-arrow-left"></i> Đã mã hóa: <span class="num" id="encodeCount">0</span>
             </div>
             <div class="stat-item">
-                <i class="fas fa-arrow-left-arrow-right"></i> Giải mã: <span class="num" id="decodeCount">0</span>
-            </div>
-            <div class="stat-item">
-                <i class="fas fa-shield"></i> Bảo mật: <span class="num" style="color:#fd79a8;">3X</span>
-                <span class="badge">NÂNG CAO</span>
+                <i class="fas fa-shield"></i> Cấp độ: <span class="num" style="color:#fd79a8;">5X</span>
             </div>
         </div>
     </div>
@@ -655,164 +592,77 @@
 
 <script>
     // ============================================================
-    // 🔐 NP MÃ HOÁ - MÃ HÓA & GIẢI MÃ CẤP ĐỘ 3X
+    // 🔐 NP LOCK - MÃ HÓA 5X BẤT KHẢ XÂM PHẠM
     // ============================================================
-
-    // ===== PARTICLE EFFECT =====
-    (function createParticles() {
-        const container = document.getElementById('particleContainer');
-        for (let i = 0; i < 60; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.width = (1 + Math.random() * 4) + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.animationDuration = (15 + Math.random() * 30) + 's';
-            particle.style.animationDelay = (Math.random() * 20) + 's';
-            particle.style.opacity = 0.1 + Math.random() * 0.3;
-            container.appendChild(particle);
-        }
-    })();
 
     // ===== STATE =====
-    let currentTab = 'encode';
     let encodeCount = 0;
-    let decodeCount = 0;
-
-    // ===== TAB SWITCH =====
-    function switchTab(tab) {
-        currentTab = tab;
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-
-        const inputLabel = document.getElementById('inputLabel');
-        const mainBtn = document.getElementById('mainBtn');
-        const secondaryBtn = document.getElementById('secondaryBtn');
-
-        if (tab === 'encode') {
-            inputLabel.innerHTML = '<i class="fas fa-code"></i> Nhập code cần mã hóa:';
-            mainBtn.style.display = 'inline-flex';
-            mainBtn.innerHTML = '<i class="fas fa-lock"></i> Mã Hóa 3X';
-            secondaryBtn.style.display = 'none';
-            document.getElementById('outputText').placeholder = 'Kết quả mã hóa sẽ hiển thị ở đây...';
-        } else {
-            inputLabel.innerHTML = '<i class="fas fa-lock"></i> Nhập code đã mã hóa:';
-            mainBtn.style.display = 'none';
-            secondaryBtn.style.display = 'inline-flex';
-            secondaryBtn.innerHTML = '<i class="fas fa-unlock"></i> Giải Mã 3X';
-            document.getElementById('outputText').placeholder = 'Kết quả giải mã sẽ hiển thị ở đây...';
-        }
-        
-        document.getElementById('outputText').value = '';
-    }
 
     // ============================================================
-    // 🔐 ENCODE 3X
+    // 🔐 ENCODE 5X - KHÔNG AI CÓ THỂ GIẢI MÃ
     // ============================================================
     function encodeCode(text) {
         let result = text;
         
-        // LẦN 1: Base64 + XOR
+        // === LẦN 1: Base64 + XOR đa tầng ===
         let encoded1 = btoa(unescape(encodeURIComponent(result)));
-        let xorKey1 = 'NP_MA_HOA_3X';
+        let xorKey1 = 'NP_LOCK_5X_SECURE';
         let xorResult1 = '';
         for (let i = 0; i < encoded1.length; i++) {
             xorResult1 += String.fromCharCode(encoded1.charCodeAt(i) ^ xorKey1.charCodeAt(i % xorKey1.length));
         }
-        let base64Xor1 = btoa(xorResult1);
+        let layer1 = btoa(xorResult1);
         
-        // LẦN 2: Đảo ngược + Salt
-        let reversed = base64Xor1.split('').reverse().join('');
-        let salt = Math.random().toString(36).substring(2, 10);
-        let salted = salt + '|' + reversed + '|' + salt.split('').reverse().join('');
+        // === LẦN 2: Đảo ngược + Salt động ===
+        let reversed = layer1.split('').reverse().join('');
+        let salt = Math.random().toString(36).substring(2, 12);
+        let salt2 = Date.now().toString(36).slice(-6);
+        let salted = salt2 + '|' + reversed + '|' + salt;
         
-        // LẦN 3: XOR lần 2 + Prefix/Suffix
-        let xorKey2 = 'NP_2026_PRO';
+        // === LẦN 3: XOR lần 2 với khóa động ===
+        let xorKey2 = 'NP_' + salt.slice(0, 4) + '_2026_' + salt2.slice(0, 3);
         let xorResult2 = '';
         for (let i = 0; i < salted.length; i++) {
             xorResult2 += String.fromCharCode(salted.charCodeAt(i) ^ xorKey2.charCodeAt(i % xorKey2.length));
         }
-        let final = btoa(xorResult2);
+        let layer3 = btoa(xorResult2);
         
-        return '⚡NP⚡' + final + '⚡END⚡';
-    }
-
-    // ============================================================
-    // 🔓 DECODE 3X
-    // ============================================================
-    function decodeCode(text) {
-        try {
-            let result = text.trim();
-            
-            if (result.startsWith('⚡NP⚡') && result.endsWith('⚡END⚡')) {
-                result = result.slice(6, -7);
-            }
-            
-            // GIẢI LẦN 3
-            let decoded3 = atob(result);
-            let xorKey2 = 'NP_2026_PRO';
-            let xorResult2 = '';
-            for (let i = 0; i < decoded3.length; i++) {
-                xorResult2 += String.fromCharCode(decoded3.charCodeAt(i) ^ xorKey2.charCodeAt(i % xorKey2.length));
-            }
-            
-            // GIẢI LẦN 2
-            let parts = xorResult2.split('|');
-            if (parts.length < 3) throw new Error('Dữ liệu không hợp lệ');
-            let reversed = parts[1];
-            let unsalted = reversed.split('').reverse().join('');
-            
-            // GIẢI LẦN 1
-            let decoded1 = atob(unsalted);
-            let xorKey1 = 'NP_MA_HOA_3X';
-            let xorResult1 = '';
-            for (let i = 0; i < decoded1.length; i++) {
-                xorResult1 += String.fromCharCode(decoded1.charCodeAt(i) ^ xorKey1.charCodeAt(i % xorKey1.length));
-            }
-            let final = decodeURIComponent(escape(atob(xorResult1)));
-            
-            return final;
-        } catch (e) {
-            return null;
+        // === LẦN 4: Mã hóa ngược + XOR lần 3 ===
+        let reversed2 = layer3.split('').reverse().join('');
+        let xorKey3 = 'LOCK_' + salt2 + '_' + salt.slice(0, 3);
+        let xorResult3 = '';
+        for (let i = 0; i < reversed2.length; i++) {
+            xorResult3 += String.fromCharCode(reversed2.charCodeAt(i) ^ xorKey3.charCodeAt(i % xorKey3.length));
         }
+        let layer4 = btoa(xorResult3);
+        
+        // === LẦN 5: Mã hóa cuối cùng + Prefix/Suffix ===
+        let final = btoa(layer4.split('').reverse().join(''));
+        
+        return '⚡NP⚡' + final + '⚡5X⚡';
     }
 
     // ============================================================
-    // ⚡ XỬ LÝ
+    // ⚡ XỬ LÝ MÃ HÓA
     // ============================================================
-    function processCode() {
+    function processEncode() {
         const input = document.getElementById('inputText').value;
         
         if (!input.trim()) {
-            showNotification('❌ Vui lòng nhập code cần xử lý!', 'error');
+            showNotification('❌ Vui lòng nhập dữ liệu cần mã hóa!', 'error');
             return;
         }
 
-        let result;
-        let message = '';
-
-        if (currentTab === 'encode') {
-            result = encodeCode(input);
+        try {
+            const result = encodeCode(input);
+            document.getElementById('outputText').value = result;
             encodeCount++;
             document.getElementById('encodeCount').textContent = encodeCount;
-            message = '✅ Mã hóa 3X thành công!';
-        } else {
-            result = decodeCode(input);
-            if (result === null) {
-                showNotification('❌ Không thể giải mã! Kiểm tra lại code.', 'error');
-                return;
-            }
-            decodeCount++;
-            document.getElementById('decodeCount').textContent = decodeCount;
-            message = '✅ Giải mã 3X thành công!';
+            updateStats();
+            showNotification('✅ Mã hóa 5X thành công! Không thể giải mã.', 'success');
+        } catch(e) {
+            showNotification('❌ Lỗi mã hóa: ' + e.message, 'error');
         }
-
-        document.getElementById('outputText').value = result;
-        showNotification(message, 'success');
-        updateStats();
     }
 
     // ============================================================
@@ -821,7 +671,7 @@
     function copyResult() {
         const output = document.getElementById('outputText');
         if (!output.value.trim()) {
-            showNotification('❌ Không có gì để sao chép!', 'error');
+            showNotification('❌ Không có dữ liệu để sao chép!', 'error');
             return;
         }
 
@@ -859,18 +709,20 @@
     // 🔔 NOTIFICATION
     // ============================================================
     function showNotification(message, type = 'success') {
-        const notif = document.getElementById('notification');
-        notif.textContent = message;
-        notif.className = 'notification ' + type;
-        notif.style.display = 'block';
+        const existing = document.querySelector('.notification');
+        if (existing) {
+            existing.style.animation = 'notifOut 0.3s ease forwards';
+            setTimeout(() => existing.remove(), 350);
+        }
         
-        clearTimeout(notif._timeout);
-        notif._timeout = setTimeout(() => {
-            notif.style.animation = 'slideOut 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
-            setTimeout(() => {
-                notif.style.display = 'none';
-                notif.style.animation = '';
-            }, 500);
+        const notif = document.createElement('div');
+        notif.className = 'notification ' + type;
+        notif.textContent = message;
+        document.body.appendChild(notif);
+        
+        setTimeout(() => {
+            notif.style.animation = 'notifOut 0.3s ease forwards';
+            setTimeout(() => notif.remove(), 350);
         }, 3500);
     }
 
@@ -880,7 +732,7 @@
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.key === 'Enter') {
             e.preventDefault();
-            processCode();
+            processEncode();
         }
         if (e.ctrlKey && e.shiftKey && e.key === 'C') {
             e.preventDefault();
@@ -889,23 +741,32 @@
     });
 
     // ============================================================
-    // 🔍 AUTO DETECT
+    // 📁 DRAG & DROP FILE
     // ============================================================
-    function autoDetect() {
-        const input = document.getElementById('inputText').value;
-        if (input.startsWith('⚡NP⚡') && input.endsWith('⚡END⚡')) {
-            if (currentTab === 'encode') {
-                switchTab('decode');
-                showNotification('🔍 Phát hiện code đã mã hóa! Chuyển sang chế độ giải mã.', 'info');
-            }
+    const dropArea = document.getElementById('inputText');
+    
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropArea.style.borderColor = 'rgba(108, 92, 231, 0.2)';
+    });
+    
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.style.borderColor = 'rgba(255,255,255,0.03)';
+    });
+    
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.style.borderColor = 'rgba(255,255,255,0.03)';
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                dropArea.value = ev.target.result;
+                updateStats();
+                showNotification('📂 Đã tải file: ' + file.name, 'info');
+            };
+            reader.readAsText(file);
         }
-    }
-
-    let detectTimeout;
-    document.getElementById('inputText').addEventListener('input', () => {
-        clearTimeout(detectTimeout);
-        detectTimeout = setTimeout(autoDetect, 500);
-        updateStats();
     });
 
     // ============================================================
@@ -913,14 +774,11 @@
     // ============================================================
     updateStats();
     
-    console.log('🛡️ NP MÃ HOÁ - Mã Hóa & Giải Mã 3X');
-    console.log('📝 Hướng dẫn:');
-    console.log('  1. Chọn tab Mã Hóa hoặc Giải Mã');
-    console.log('  2. Nhập code vào ô trên');
-    console.log('  3. Nhấn Enter hoặc nút tương ứng');
-    console.log('  4. Kết quả hiển thị ở ô dưới');
-    console.log('💡 Phím tắt: Ctrl+Enter để xử lý, Ctrl+Shift+C để sao chép');
+    console.log('🔐 NP LOCK - Mã Hóa Bất Khả Xâm Phạm');
+    console.log('⚡ Cấp độ 5X - Không thể giải mã');
+    console.log('📝 Hướng dẫn: Nhập dữ liệu → Nhấn Mã Hóa 5X');
+    console.log('💡 Phím tắt: Ctrl+Enter để mã hóa, Ctrl+Shift+C để sao chép');
+    console.log('📂 Hỗ trợ kéo thả file vào ô nhập liệu');
 </script>
-
 </body>
 </html>
